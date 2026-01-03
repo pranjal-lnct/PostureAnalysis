@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Posture Analysis - Nyle Health</title>
+
+    <!-- Security & Privacy -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self';
+                   script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
+                   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+                   font-src 'self' https://fonts.gstatic.com;
+                   img-src 'self' data:;">
+
+    <!-- Resource Optimization -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" as="style">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        medical: {
+                            50: '#f0fdfa',   /* Teal 50 */
+                            100: '#ccfbf1',  /* Teal 100 */
+                            500: '#14b8a6',  /* Teal 500 */
+                            600: '#0d9488',  /* Teal 600 */
+                            900: '#134e4a',  /* Teal 900 */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .no-break {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            @page {
+                margin: 2cm;
+            }
+
+            @page :first {
+                margin-top: 1cm;
+            }
+
+            /* Ensure sections start on appropriate pages */
+            .detailed-zone-analysis {
+                page-break-before: auto;
+            }
+
+            /* Make SVG print-friendly */
+            svg {
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* Ensure buttons and interactive elements are hidden */
+            button {
+                display: none;
+            }
+
+            /* Add confidential watermark */
+            .watermark {
+                display: block !important;
+            }
+        }
+
+        /* Smooth animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Metric detail modal styles */
+        .modal-overlay {
+            backdrop-filter: blur(4px);
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            transition: transform 0.3s ease-out;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+
+    <!-- Confidential Watermark (Print Only) -->
+    <div class="watermark fixed inset-0 pointer-events-none z-0 hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                    text-slate-200 text-6xl font-bold opacity-10 rotate-[-45deg] select-none">
+            CONFIDENTIAL
+        </div>
+    </div>
+
+    <!-- Export & Action Buttons (No Print) -->
+    <div class="fixed bottom-6 right-6 flex flex-col gap-3 no-print z-50 fade-in">
+        <button onclick="window.print()"
+                class="bg-medical-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-medical-700 hover:shadow-xl transition-all duration-300 flex items-center gap-2 font-semibold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+            </svg>
+            Export PDF
+        </button>
+        <button onclick="scrollToTop()"
+                class="bg-slate-700 text-white px-6 py-3 rounded-full shadow-lg hover:bg-slate-800 hover:shadow-xl transition-all duration-300 flex items-center gap-2 font-semibold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+            </svg>
+            Top
+        </button>
+    </div>
+
+    <!-- Top decorative bar -->
+    <div class="h-2 bg-gradient-to-r from-medical-600 to-emerald-500 w-full fixed top-0 z-50 no-print"></div>
+
+    <main class="max-w-6xl mx-auto px-6 py-12">
+
+        <!-- Header Section -->
+        <header role="banner"
+            class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-flex items-center space-x-3 mb-3">
+                    <!-- Nyle Health Logo -->
+                    <div
+                        class="w-10 h-10 bg-medical-600 rounded-lg flex items-center justify-center text-white shadow-lg"
+                        role="img" aria-label="Nyle Health Logo">
+                        <span class="font-serif font-bold text-xl" aria-hidden="true">N</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900 leading-none tracking-tight">NYLE HEALTH</h2>
+                        <span class="text-[10px] font-bold tracking-widest text-medical-600 uppercase">Hinjewadi</span>
+                    </div>
+                </div>
+                <h1 class="text-4xl font-serif font-bold text-slate-900 tracking-tight mb-2 mt-4">Posture Analysis
+                    Report</h1>
+                <p class="text-slate-500">AI-Assisted Physiotherapy Assessment</p>
+
+                <!-- Metadata Section -->
+                <div class="mt-4 text-xs text-slate-500 space-y-1 border-t border-slate-100 pt-3">
+                    {{ if .overall_confidence }}
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-slate-600">Overall Confidence:</span>
+                        <div class="flex items-center gap-1">
+                            <div class="flex gap-0.5">
+                                {{ $confPercent := mul .overall_confidence 100 }}
+                                {{ range $i := seq 5 }}
+                                    <div class="w-2.5 h-2.5 rounded-full {{ if lt (mul (toFloat $i) 20) $confPercent }}bg-medical-500{{ else }}bg-slate-200{{ end }}"></div>
+                                {{ end }}
+                            </div>
+                            <span class="ml-1 font-mono">{{ printf "%.0f" $confPercent }}%</span>
+                        </div>
+                    </div>
+                    {{ end }}
+                    {{ if .back_view_provided }}
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-slate-600">Views Captured:</span>
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-semibold">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            4 Views (Complete)
+                        </span>
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+
+            <div class="mt-6 md:mt-0 bg-slate-50 rounded-xl p-4 border border-slate-100 text-right relative z-10"
+                 role="status" aria-label="Postural Health Score">
+                <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Postural Health Index
+                </div>
+                <div class="text-3xl font-bold text-slate-900 flex items-center justify-end">
+                    <span aria-label="Score {{ .PostureScore }} out of 100">{{ .PostureScore }}</span>
+                    <span class="text-lg text-slate-400 font-medium ml-0.5">/100</span>
+                    <div
+                        class="ml-3 w-12 h-12 rounded-full border-4 border-slate-100 flex items-center justify-center bg-white shadow-sm"
+                        role="img" aria-label="{{ if ge .PostureScore 90 }}Excellent posture{{ else if ge .PostureScore 70 }}Good posture, some attention needed{{ else }}Needs attention{{ end }}">
+                        <div
+                            class="w-3 h-3 rounded-full {{ if ge .PostureScore 90 }}bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]{{ else if ge .PostureScore 70 }}bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.5)]{{ else }}bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)] animate-pulse{{ end }}">
+                            <span class="sr-only">{{ if ge .PostureScore 90 }}Excellent{{ else if ge .PostureScore 70 }}Good{{ else }}Needs Attention{{ end }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bg decoration -->
+            <div
+                class="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-medical-50 to-transparent opacity-50 -z-0">
+            </div>
+        </header>
+
+        <!-- Severity Legend -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 mb-8 no-print" role="complementary" aria-label="Severity indicator legend">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-sm font-semibold text-slate-600">Severity Indicators:</span>
+                </div>
+                <div class="flex flex-wrap gap-4 text-xs">
+                    <div class="flex items-center gap-1.5" role="listitem">
+                        <div class="w-3 h-3 rounded-full bg-emerald-500" aria-hidden="true"></div>
+                        <span class="font-medium text-slate-700">Normal</span>
+                    </div>
+                    <div class="flex items-center gap-1.5" role="listitem">
+                        <div class="w-3 h-3 rounded-full bg-yellow-500" aria-hidden="true"></div>
+                        <span class="font-medium text-slate-700">Mild</span>
+                    </div>
+                    <div class="flex items-center gap-1.5" role="listitem">
+                        <div class="w-3 h-3 rounded-full bg-orange-500" aria-hidden="true"></div>
+                        <span class="font-medium text-slate-700">Moderate</span>
+                    </div>
+                    <div class="flex items-center gap-1.5" role="listitem">
+                        <div class="w-3 h-3 rounded-full bg-red-500" aria-hidden="true"></div>
+                        <span class="font-medium text-slate-700">Severe</span>
+                    </div>
+                    <div class="flex items-center gap-1.5" role="listitem">
+                        <div class="w-3 h-3 rounded-full bg-slate-300" aria-hidden="true"></div>
+                        <span class="font-medium text-slate-700">Unknown</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-12">
+
+            <!-- Top Section: Visualization & Clinical Context -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                <!-- Left: Heatmap (Holographic Redesign) -->
+                <div class="lg:col-span-4 h-full">
+                    <section role="region" aria-label="Biomechanical scan visualization"
+                        class="bg-slate-900 rounded-3xl shadow-xl overflow-hidden relative h-full flex flex-col group border border-slate-800">
+                        <!-- Ambient Background Glow -->
+                        <div
+                            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-teal-500/10 blur-[100px] pointer-events-none">
+                        </div>
+
+                        <div class="p-6 relative z-10 flex justify-between items-start">
+                            <div>
+                                <h2 class="text-white font-bold text-lg flex items-center gap-2">
+                                    <span class="flex h-2 w-2 relative" role="status" aria-label="Active scan">
+                                        <span
+                                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75" aria-hidden="true"></span>
+                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500" aria-hidden="true"></span>
+                                    </span>
+                                    Scan Analysis
+                                </h2>
+                                <p class="text-slate-400 text-xs font-medium tracking-wide mt-1">Biomechanical Scan •
+                                    Anterior View</p>
+                            </div>
+                            <div class="text-right">
+                                <!-- Health score moved to header -->
+                            </div>
+                        </div>
+
+                        <div class="flex-1 relative flex justify-center items-center pb-8">
+                            <!-- Holographic Body Map -->
+                            <svg width="240" height="480" viewBox="0 0 240 480" fill="none"
+                                xmlns="http://www.w3.org/2000/svg" class="drop-shadow-2xl"
+                                role="img" aria-label="Body scan diagram showing posture assessment for head, shoulders, spine, pelvis, knees and feet">
+                                <title>Posture Assessment Body Scan</title>
+                                <desc>Visual representation showing severity indicators for different body regions based on biomechanical analysis</desc>
+                                <defs>
+                                    <linearGradient id="holoGradient" x1="120" y1="0" x2="120" y2="480"
+                                        gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#0f172a" stop-opacity="0" />
+                                        <stop offset="50%" stop-color="#2dd4bf" stop-opacity="0.1" />
+                                        <stop offset="100%" stop-color="#0f172a" stop-opacity="0" />
+                                    </linearGradient>
+                                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feGaussianBlur stdDeviation="5" result="coloredBlur" />
+                                        <feMerge>
+                                            <feMergeNode in="coloredBlur" />
+                                            <feMergeNode in="SourceGraphic" />
+                                        </feMerge>
+                                    </filter>
+                                </defs>
+
+                                <!-- Central Axis (Dotted) -->
+                                <line x1="120" y1="20" x2="120" y2="460" stroke="#334155" stroke-width="1"
+                                    stroke-dasharray="4 4" />
+
+                                <!-- Body Silhouette (Smooth Hologram) -->
+                                <path
+                                    d="M120 30 C100 30, 95 45, 95 60 C95 75, 100 85, 120 85 C140 85, 145 75, 145 60 C145 45, 140 30, 120 30 Z"
+                                    fill="url(#holoGradient)" stroke="#2dd4bf" stroke-width="1" stroke-opacity="0.3" />
+                                <path d="M95 85 Q70 90, 60 110 L50 200 L40 260" stroke="#2dd4bf" stroke-width="1"
+                                    stroke-opacity="0.2" fill="none" />
+                                <path d="M145 85 Q170 90, 180 110 L190 200 L200 260" stroke="#2dd4bf" stroke-width="1"
+                                    stroke-opacity="0.2" fill="none" />
+                                <path d="M95 85 L145 85 L145 200 L95 200 Z" fill="url(#holoGradient)" stroke="#2dd4bf"
+                                    stroke-width="1" stroke-opacity="0.2" />
+                                <path d="M95 200 L80 430 H105 L115 200" stroke="#2dd4bf" stroke-width="1"
+                                    stroke-opacity="0.2" fill="none" />
+                                <path d="M145 200 L160 430 H135 L125 200" stroke="#2dd4bf" stroke-width="1"
+                                    stroke-opacity="0.2" fill="none" />
+
+                                <!-- Nodes and Status Indicators with Schematic Labels -->
+
+                                <!-- HEAD -->
+                                {{ if eq .head_neck.severity "severe" }}
+                                <!-- Schematic Connector -->
+                                <path d="M130 55 L160 55 L170 45" stroke="#ef4444" stroke-width="1" fill="none"
+                                    opacity="0.8" />
+                                <!-- Label Box -->
+                                <rect x="170" y="35" width="60" height="14" rx="2" fill="#ef4444" opacity="0.9" />
+                                <text x="200" y="46" font-family="monospace" font-size="10" fill="white"
+                                    font-weight="bold" text-anchor="middle">HEAD:SEV</text>
+
+                                <!-- Core & Pulse -->
+                                <circle cx="120" cy="55" r="25" class="stroke-red-500/50 animate-ping" stroke-width="1"
+                                    fill="none" />
+                                <circle cx="120" cy="55" r="8" fill="#ef4444" filter="url(#glow)" />
+                                <!-- Target Brackets -->
+                                <path
+                                    d="M100 35 L90 35 L90 45 M150 35 L160 35 L160 45 M90 65 L90 75 L100 75 M160 65 L160 75 L150 75"
+                                    stroke="#ef4444" stroke-width="2" fill="none" filter="url(#glow)" />
+
+                                {{ else if eq .head_neck.severity "moderate" }}
+                                <!-- Connector -->
+                                <path d="M130 55 L160 55" stroke="#f97316" stroke-width="1" fill="none" opacity="0.6" />
+                                <text x="165" y="58" font-family="monospace" font-size="9" fill="#f97316"
+                                    font-weight="bold">MOD</text>
+
+                                <!-- Core -->
+                                <circle cx="120" cy="55" r="8" fill="#f97316" filter="url(#glow)" />
+                                <circle cx="120" cy="55" r="20" class="stroke-orange-500/40 animate-pulse"
+                                    stroke-width="0.5" fill="none" />
+                                {{ else if eq .head_neck.severity "mild" }}
+                                <!-- Core -->
+                                <circle cx="120" cy="55" r="6" fill="#eab308" filter="url(#glow)" />
+                                <circle cx="120" cy="55" r="15" stroke="#eab308" stroke-width="0.5" fill="none" opacity="0.3" />
+                                {{ else if eq .head_neck.severity "unknown" }}
+                                <circle cx="120" cy="55" r="4" fill="#94a3b8" opacity="0.5" />
+                                {{ else }}
+                                <circle cx="120" cy="55" r="4" fill="#10b981" opacity="0.6" />
+                                {{ end }}
+
+
+                                <!-- SHOULDERS -->
+                                {{ if eq .shoulders.severity "severe" }}
+                                <path d="M55 85 L35 85 L25 75" stroke="#ef4444" stroke-width="1" fill="none"
+                                    opacity="0.8" />
+                                <rect x="5" y="65" width="65" height="14" rx="2" fill="#ef4444" opacity="0.9" />
+                                <text x="37" y="76" font-family="monospace" font-size="10" fill="white"
+                                    font-weight="bold" text-anchor="middle">SHLDR:SEV</text>
+
+                                <rect x="60" y="75" width="120" height="25" rx="12"
+                                    class="stroke-red-500/50 animate-ping" stroke-width="1" fill="none" />
+                                <rect x="70" y="85" width="100" height="4" rx="2" fill="#ef4444" filter="url(#glow)" />
+                                <!-- Target Brackets -->
+                                <path
+                                    d="M60 75 L50 75 L50 85 M190 75 L200 75 L200 85 M50 100 L50 110 L60 110 M200 100 L200 110 L190 110"
+                                    stroke="#ef4444" stroke-width="2" fill="none" filter="url(#glow)" />
+                                {{ else if eq .shoulders.severity "moderate" }}
+                                <path d="M55 85 L35 85" stroke="#f97316" stroke-width="1" fill="none" opacity="0.6" />
+                                <text x="5" y="88" font-family="monospace" font-size="9" fill="#f97316"
+                                    font-weight="bold">SHLDR:MOD</text>
+                                <rect x="70" y="85" width="100" height="4" rx="2" fill="#f97316" filter="url(#glow)" />
+                                {{ else if eq .shoulders.severity "mild" }}
+                                <rect x="70" y="85" width="100" height="4" rx="2" fill="#eab308" filter="url(#glow)" opacity="0.7" />
+                                {{ else if eq .shoulders.severity "unknown" }}
+                                <rect x="70" y="85" width="100" height="4" rx="2" fill="#94a3b8" opacity="0.4" />
+                                {{ else }}
+                                <rect x="70" y="85" width="100" height="4" rx="2" fill="#10b981" opacity="0.4" />
+                                {{ end }}
+
+
+                                <!-- SPINE -->
+                                {{ if eq .spine.severity "severe" }}
+                                <path d="M140 140 L160 140 L170 130" stroke="#ef4444" stroke-width="1" fill="none"
+                                    opacity="0.8" />
+                                <rect x="170" y="120" width="60" height="14" rx="2" fill="#ef4444" opacity="0.9" />
+                                <text x="200" y="131" font-family="monospace" font-size="10" fill="white"
+                                    font-weight="bold" text-anchor="middle">SPINE:SEV</text>
+
+                                <rect x="106" y="90" width="28" height="100" rx="14"
+                                    class="stroke-red-500/50 animate-ping" stroke-width="1" fill="none" />
+                                <rect x="116" y="90" width="8" height="100" rx="4" fill="#ef4444" filter="url(#glow)" />
+                                <!-- Target Brackets -->
+                                <path
+                                    d="M100 90 L90 90 L90 100 M150 90 L160 90 L160 100 M90 180 L90 190 L100 190 M160 180 L160 190 L150 190"
+                                    stroke="#ef4444" stroke-width="2" fill="none" filter="url(#glow)" />
+                                {{ else if eq .spine.severity "moderate" }}
+                                <path d="M140 140 L160 140" stroke="#f97316" stroke-width="1" fill="none"
+                                    opacity="0.6" />
+                                <text x="165" y="143" font-family="monospace" font-size="9" fill="#f97316"
+                                    font-weight="bold">SPN:MOD</text>
+                                <rect x="116" y="90" width="8" height="100" rx="4" fill="#f97316" filter="url(#glow)" />
+                                {{ else if eq .spine.severity "mild" }}
+                                <rect x="116" y="90" width="8" height="100" rx="4" fill="#eab308" filter="url(#glow)" opacity="0.6" />
+                                {{ else if eq .spine.severity "unknown" }}
+                                <rect x="116" y="90" width="8" height="100" rx="4" fill="#94a3b8" opacity="0.3" />
+                                {{ else }}
+                                <rect x="116" y="90" width="8" height="100" rx="4" fill="#10b981" opacity="0.3" />
+                                {{ end }}
+
+                                <!-- PELVIS -->
+                                {{ if eq .pelvis.severity "severe" }}
+                                <path d="M55 198 L35 198 L25 188" stroke="#ef4444" stroke-width="1" fill="none"
+                                    opacity="0.8" />
+                                <rect x="5" y="178" width="65" height="14" rx="2" fill="#ef4444" opacity="0.9" />
+                                <text x="37" y="189" font-family="monospace" font-size="10" fill="white"
+                                    font-weight="bold" text-anchor="middle">PELVIS:SEV</text>
+
+                                <rect x="70" y="185" width="100" height="25" rx="12"
+                                    class="stroke-red-500/50 animate-ping" stroke-width="1" fill="none" />
+                                <rect x="80" y="195" width="80" height="6" rx="3" fill="#ef4444" filter="url(#glow)" />
+                                <!-- Target Brackets -->
+                                <path
+                                    d="M70 185 L60 185 L60 195 M180 185 L190 185 L190 195 M60 215 L60 225 L70 225 M190 215 L190 225 L180 225"
+                                    stroke="#ef4444" stroke-width="2" fill="none" filter="url(#glow)" />
+                                {{ else if eq .pelvis.severity "moderate" }}
+                                <path d="M55 198 L35 198" stroke="#f97316" stroke-width="1" fill="none" opacity="0.6" />
+                                <text x="5" y="201" font-family="monospace" font-size="9" fill="#f97316"
+                                    font-weight="bold">PELV:MOD</text>
+                                <rect x="80" y="195" width="80" height="6" rx="3" fill="#f97316" filter="url(#glow)" />
+                                {{ else if eq .pelvis.severity "mild" }}
+                                <rect x="80" y="195" width="80" height="6" rx="3" fill="#eab308" filter="url(#glow)" opacity="0.7" />
+                                {{ else if eq .pelvis.severity "unknown" }}
+                                <rect x="80" y="195" width="80" height="6" rx="3" fill="#94a3b8" opacity="0.4" />
+                                {{ else }}
+                                <rect x="80" y="195" width="80" height="6" rx="3" fill="#10b981" opacity="0.4" />
+                                {{ end }}
+
+                                <!-- KNEES -->
+                                {{ if eq .lower_extremities.severity "severe" }}
+                                <path d="M150 310 L180 310 L190 300" stroke="#ef4444" stroke-width="1" fill="none"
+                                    opacity="0.8" />
+                                <rect x="170" y="290" width="50" height="14" rx="2" fill="#ef4444" opacity="0.9" />
+                                <text x="195" y="301" font-family="monospace" font-size="10" fill="white"
+                                    font-weight="bold" text-anchor="middle">KNEE:SEV</text>
+
+                                <circle cx="92" cy="310" r="15" class="stroke-red-500/50 animate-ping" stroke-width="1"
+                                    fill="none" />
+                                <circle cx="148" cy="310" r="15" class="stroke-red-500/50 animate-ping" stroke-width="1"
+                                    fill="none" />
+                                <circle cx="92" cy="310" r="4" fill="#ef4444" filter="url(#glow)" />
+                                <circle cx="148" cy="310" r="4" fill="#ef4444" filter="url(#glow)" />
+                                {{ else if eq .lower_extremities.severity "moderate" }}
+                                <path d="M150 310 L170 310" stroke="#f97316" stroke-width="1" fill="none"
+                                    opacity="0.6" />
+                                <text x="175" y="313" font-family="monospace" font-size="9" fill="#f97316"
+                                    font-weight="bold">LEGS:MOD</text>
+                                <circle cx="92" cy="310" r="4" fill="#f97316" filter="url(#glow)" />
+                                <circle cx="148" cy="310" r="4" fill="#f97316" filter="url(#glow)" />
+                                {{ else if eq .lower_extremities.severity "mild" }}
+                                <circle cx="92" cy="310" r="4" fill="#eab308" filter="url(#glow)" opacity="0.8" />
+                                <circle cx="148" cy="310" r="4" fill="#eab308" filter="url(#glow)" opacity="0.8" />
+                                {{ else if eq .lower_extremities.severity "unknown" }}
+                                <circle cx="92" cy="310" r="4" fill="#94a3b8" opacity="0.5" />
+                                <circle cx="148" cy="310" r="4" fill="#94a3b8" opacity="0.5" />
+                                {{ else }}
+                                <circle cx="92" cy="310" r="4" fill="#10b981" opacity="0.6" />
+                                <circle cx="148" cy="310" r="4" fill="#10b981" opacity="0.6" />
+                                {{ end }}
+
+                                <!-- FEET -->
+                                {{ if eq .ankles_feet.severity "severe" }}
+                                <path d="M150 425 L180 425 L190 415" stroke="#ef4444" stroke-width="1" fill="none"
+                                    opacity="0.8" />
+                                <rect x="170" y="405" width="50" height="14" rx="2" fill="#ef4444" opacity="0.9" />
+                                <text x="195" y="416" font-family="monospace" font-size="10" fill="white"
+                                    font-weight="bold" text-anchor="middle">FOOT:SEV</text>
+
+                                <rect x="65" y="415" width="50" height="25" rx="12"
+                                    class="stroke-red-500/50 animate-ping" stroke-width="1" fill="none" />
+                                <rect x="125" y="415" width="50" height="25" rx="12"
+                                    class="stroke-red-500/50 animate-ping" stroke-width="1" fill="none" />
+                                <rect x="75" y="425" width="30" height="4" rx="2" fill="#ef4444" filter="url(#glow)" />
+                                <rect x="135" y="425" width="30" height="4" rx="2" fill="#ef4444" filter="url(#glow)" />
+                                {{ else if eq .ankles_feet.severity "moderate" }}
+                                <rect x="75" y="425" width="30" height="4" rx="2" fill="#f97316" filter="url(#glow)" />
+                                <rect x="135" y="425" width="30" height="4" rx="2" fill="#f97316" filter="url(#glow)" />
+                                {{ else if eq .ankles_feet.severity "mild" }}
+                                <rect x="75" y="425" width="30" height="4" rx="2" fill="#eab308" filter="url(#glow)" opacity="0.7" />
+                                <rect x="135" y="425" width="30" height="4" rx="2" fill="#eab308" filter="url(#glow)" opacity="0.7" />
+                                {{ else if eq .ankles_feet.severity "unknown" }}
+                                <rect x="75" y="425" width="30" height="4" rx="2" fill="#94a3b8" opacity="0.4" />
+                                <rect x="135" y="425" width="30" height="4" rx="2" fill="#94a3b8" opacity="0.4" />
+                                {{ else }}
+                                <rect x="75" y="425" width="30" height="4" rx="2" fill="#10b981" opacity="0.4" />
+                                <rect x="135" y="425" width="30" height="4" rx="2" fill="#10b981" opacity="0.4" />
+                                {{ end }}
+
+                            </svg>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right: Clinical Reasoning & Priority Issues -->
+                <div class="lg:col-span-8 space-y-6 flex flex-col h-full">
+
+                    <!-- Priority Attention Areas (New Section) -->
+                    {{ $hasSevere := false }}
+                    {{ range .Regions }}{{ if or (eq (index .Data "findings") "severe") (eq (index .Data "findings")
+                    "moderate") }}{{ $hasSevere = true }}{{ end }}{{ end }}
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {{ range .Regions }}
+                        {{ $data := .Data }}
+                        {{ $isSevere := false }}
+                        {{ $isMod := false }}
+
+                        <!-- Check severity in metrics -->
+                        {{ range $k, $v := $data }}
+                        {{ if isMap $v }}
+                        {{ if eq (index $v "severity") "severe" }}{{ $isSevere = true }}{{ end }}
+                        {{ if eq (index $v "severity") "moderate" }}{{ $isMod = true }}{{ end }}
+                        {{ end }}
+                        {{ end }}
+
+                        <!-- Render Priority Card if Severe or Moderate -->
+                        {{ if or $isSevere $isMod }}
+                        <div
+                            class="p-5 rounded-xl border-l-4 shadow-sm {{ if $isSevere }}bg-red-50 border-red-500{{ else }}bg-orange-50 border-orange-400{{ end }}">
+                            <div class="flex items-start justify-between mb-2">
+                                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                    {{ if $isSevere }}<span class="text-red-500">⚠️</span>{{ else }}<span
+                                        class="text-orange-500">⚠️</span>{{ end }}
+                                    {{ .Title }}
+                                </h3>
+                                <span
+                                    class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full {{ if $isSevere }}bg-red-100 text-red-600{{ else }}bg-orange-100 text-orange-600{{ end }}">
+                                    {{ if $isSevere }}Action Required{{ else }}Attention{{ end }}
+                                </span>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-snug">
+                                {{ index $data "findings" }}
+                            </p>
+                        </div>
+                        {{ end }}
+                        {{ end }}
+                    </div>
+
+                    <!-- Clinical Reasoning & Metrics -->
+                    <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 no-break flex-1">
+                        <div class="flex items-center gap-3 mb-6 border-b border-slate-50 pb-4">
+                            <div class="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Clinical Reasoning</h2>
+                                <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Physiotherapist
+                                    Assessment</p>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 text-base leading-relaxed text-justify mb-8">
+                            {{ .clinical_reasoning }}
+                        </p>
+
+                        <!-- Global Metrics Inline -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {{ if .global_alignment.plumb_line_deviation }}
+                            <div
+                                class="bg-slate-50 rounded-xl p-4 border border-slate-100 flex items-center justify-between">
+                                <div>
+                                    <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Plumb
+                                        Line</div>
+                                    <div class="text-xs text-slate-500">Center of mass offset</div>
+                                </div>
+                                <div class="text-xl font-bold text-slate-800">{{
+                                    .global_alignment.plumb_line_deviation.value }}<span
+                                        class="text-sm text-slate-500 ml-1">{{
+                                        .global_alignment.plumb_line_deviation.unit }}</span></div>
+                            </div>
+                            {{ end }}
+                            {{ if .global_alignment.forward_head_posture }}
+                            <div
+                                class="bg-slate-50 rounded-xl p-4 border border-slate-100 flex items-center justify-between">
+                                <div>
+                                    <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Fwd Head
+                                    </div>
+                                    <div class="text-xs text-slate-500">Ear-Shoulder distance</div>
+                                </div>
+                                <div class="text-xl font-bold text-slate-800">{{
+                                    .global_alignment.forward_head_posture.value }}<span
+                                        class="text-sm text-slate-500 ml-1">{{
+                                        .global_alignment.forward_head_posture.unit }}</span></div>
+                            </div>
+                            {{ end }}
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Detailed Analysis Section -->
+            <section>
+                <div class="flex items-center space-x-4 mb-8">
+                    <h2 class="text-2xl font-serif font-bold text-slate-900">Detailed Zone Analysis</h2>
+                    <div class="h-px bg-slate-200 flex-1"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Iterate over pre-structured regions -->
+                    {{ range .Regions }}
+                    {{ template "region_card_premium" . }}
+                    {{ end }}
+                </div>
+            </section>
+
+            <!-- Exercise Recommendations -->
+            {{ if .Exercises }}
+            <section class="bg-gradient-to-br from-medical-50 to-emerald-50 rounded-2xl p-8 border border-medical-100 no-break"
+                     role="region" aria-label="Recommended corrective exercises">
+                <div class="flex items-center gap-3 mb-6 border-b border-medical-100 pb-4">
+                    <div class="p-2 bg-medical-600 text-white rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-serif font-bold text-slate-900">Recommended Corrective Exercises</h2>
+                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Personalized Based on Your Analysis</p>
+                    </div>
+                </div>
+
+                <div class="mb-4 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
+                    <div class="flex items-start gap-2">
+                        <svg class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        <div>
+                            <div class="text-sm font-semibold text-amber-900 mb-1">Important Notice</div>
+                            <p class="text-xs text-amber-800">These exercises are AI-generated recommendations. Please consult with a licensed physiotherapist before starting any exercise program, especially if you experience pain or have existing medical conditions.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{ range $index, $exercise := .Exercises }}
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-medical-100 hover:shadow-md transition-shadow duration-300 group">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-medical-100 text-medical-700 flex items-center justify-center font-bold text-sm">
+                                    {{ add $index 1 }}
+                                </div>
+                                <h3 class="font-bold text-lg text-slate-900 group-hover:text-medical-700 transition-colors">
+                                    {{ if eq (printf "%T" $exercise) "main.Exercise" }}
+                                        {{ $exercise.Name }}
+                                    {{ else }}
+                                        {{ index $exercise "Name" }}
+                                    {{ end }}
+                                </h3>
+                            </div>
+                            <svg class="w-5 h-5 text-medical-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">
+                            {{ if eq (printf "%T" $exercise) "main.Exercise" }}
+                                {{ $exercise.Description }}
+                            {{ else }}
+                                {{ index $exercise "Description" }}
+                            {{ end }}
+                        </p>
+
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-start gap-2 text-xs">
+                                <svg class="w-4 h-4 text-medical-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <span class="font-semibold text-slate-700">Frequency:</span>
+                                    <span class="text-slate-600">
+                                        {{ if eq (printf "%T" $exercise) "main.Exercise" }}
+                                            {{ $exercise.Frequency }}
+                                        {{ else }}
+                                            {{ index $exercise "Frequency" }}
+                                        {{ end }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100">
+                            <div class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-xs text-slate-600 italic">
+                                    {{ if eq (printf "%T" $exercise) "main.Exercise" }}
+                                        {{ $exercise.Purpose }}
+                                    {{ else }}
+                                        {{ index $exercise "Purpose" }}
+                                    {{ end }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+
+                <div class="mt-6 p-4 bg-white rounded-xl border border-medical-100">
+                    <p class="text-xs text-slate-600 text-center">
+                        <span class="font-semibold">Pro Tip:</span> Start slowly and focus on proper form. Consistency is more important than intensity. Take photos every 2-3 weeks to track your progress.
+                    </p>
+                </div>
+            </section>
+            {{ end }}
+
+            <!-- Input Views -->
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 no-break">
+                <h2 class="text-lg font-bold text-slate-900 mb-6 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    Reference Input Views
+                </h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {{ range $key, $val := .input_images }}
+                    <div
+                        class="group relative aspect-[3/4] bg-slate-100 rounded-lg overflow-hidden border border-slate-200 cursor-pointer">
+                        <img src="{{ $val }}" alt="{{ $key }}"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                            <span class="text-[10px] font-bold text-white uppercase tracking-wider">{{ $key
+                                }}</span>
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- Templates -->
+
+    <!-- Severity Badge -->
+    {{ define "severity_badge_premium" }}
+    {{ if eq . "normal" }}
+    <!-- Green check -->
+    <div
+        class="flex items-center space-x-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Normal</span>
+    </div>
+    {{ else if eq . "mild" }}
+    <div
+        class="flex items-center space-x-1.5 bg-yellow-50 text-yellow-700 px-3 py-1 rounded-full border border-yellow-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Mild</span>
+    </div>
+    {{ else if eq . "moderate" }}
+    <div
+        class="flex items-center space-x-1.5 bg-orange-50 text-orange-700 px-3 py-1 rounded-full border border-orange-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Moderate</span>
+    </div>
+    {{ else if eq . "severe" }}
+    <div
+        class="flex items-center space-x-1.5 bg-red-50 text-red-700 px-3 py-1 rounded-full border border-red-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-red-500 text-red-500 animate-pulse"></div>
+        <span class="text-xs font-bold uppercase tracking-wide">Severe</span>
+    </div>
+    {{ else }}
+    <span class="text-xs text-gray-400 uppercase tracking-wide">Unknown</span>
+    {{ end }}
+    {{ end }}
+
+    <!-- Region Card -->
+    {{ define "region_card_premium" }}
+    <div
+        class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow duration-300 no-break">
+        <div class="px-6 py-4 border-b border-slate-50 flex items-center justify-between ">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-slate-50 rounded-lg text-slate-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ .Icon }}"></path>
+                    </svg>
+                </div>
+                <h3 class="font-serif text-lg font-bold text-slate-800">{{ .Title }}</h3>
+            </div>
+            <!-- Dynamic header border/accent could go here -->
+        </div>
+        <div class="p-6">
+            {{ if .Data.findings }}
+            <div class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-100">
+                <p class="text-sm text-slate-600 italic leading-relaxed">"{{ .Data.findings }}"</p>
+            </div>
+            {{ end }}
+
+            <div class="space-y-0 divide-y divide-slate-50">
+                {{ range $key, $val := .Data }}
+                {{ if isMap $val }}
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">{{ formatKey $key
+                                }}</span>
+                            <!-- Progress Bar Background -->
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full {{ if eq $val.severity " normal" }}bg-emerald-400 w-1/4{{ else if eq
+                                    $val.severity "mild" }}bg-yellow-400 w-2/4{{ else if eq $val.severity "moderate"
+                                    }}bg-orange-400 w-3/4{{ else if eq $val.severity "severe" }}bg-red-500 w-full{{ else }}bg-slate-300 w-1/2{{ end }}"></div>
+                            </div>
+                            <!-- Confidence Indicator -->
+                            {{ if $val.confidence }}
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    {{ $confPct := mul $val.confidence 100 }}
+                                    {{ range $i := seq 5 }}
+                                        <div class="w-1.5 h-1.5 rounded-full {{ if lt (mul (toFloat $i) 20) $confPct }}bg-medical-500{{ else }}bg-slate-200{{ end }}"></div>
+                                    {{ end }}
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">{{ printf "%.0f" $confPct }}%</span>
+                            </div>
+                            {{ end }}
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                {{ if eq $val.value nil }}
+                                <span class="text-slate-300 text-sm">--</span>
+                                {{ else }}
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">{{ $val.value }}</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">{{ $val.unit }}</div>
+                                {{ end }}
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                {{ template "severity_badge_premium" $val.severity }}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Unknown Metric Explanation -->
+                    {{ if eq $val.severity "unknown" }}
+                    <div class="text-xs text-slate-500 italic mt-2 flex items-start gap-1">
+                        <svg class="w-3 h-3 text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Unable to assess - landmark obscured by clothing or positioning</span>
+                    </div>
+                    {{ end }}
+                </div>
+                {{ end }}
+                {{ end }}
+            </div>
+        </div>
+    </div>
+    {{ end }}
+
+    <!-- Mobile Modal for Metric Details -->
+    <div id="metricModal" class="hidden fixed inset-0 bg-black/50 z-50 lg:hidden modal-overlay" onclick="closeModal(event)">
+        <div class="absolute bottom-0 inset-x-0 bg-white rounded-t-3xl p-6 max-h-[80vh] overflow-y-auto modal-content"
+             onclick="event.stopPropagation()" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                <h3 id="modalTitle" class="font-bold text-lg text-slate-900"></h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition-colors"
+                        aria-label="Close modal">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Mobile modal functions
+        function showMetricDetails(metricName, value, unit, severity, confidence, normalRange) {
+            const modal = document.getElementById('metricModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+
+            modalTitle.textContent = metricName;
+
+            let severityColor = 'emerald';
+            let severityText = 'Normal';
+            if (severity === 'mild') {
+                severityColor = 'yellow';
+                severityText = 'Mild';
+            } else if (severity === 'moderate') {
+                severityColor = 'orange';
+                severityText = 'Moderate';
+            } else if (severity === 'severe') {
+                severityColor = 'red';
+                severityText = 'Severe';
+            } else if (severity === 'unknown') {
+                severityColor = 'slate';
+                severityText = 'Unknown';
+            }
+
+            modalContent.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-slate-50 rounded-xl p-4">
+                        <div class="text-sm text-slate-500 mb-1">Current Value</div>
+                        <div class="text-3xl font-bold text-slate-900">
+                            ${value !== null ? value + ' <span class="text-lg text-slate-500">' + unit + '</span>' : '--'}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-slate-50 rounded-xl p-4">
+                            <div class="text-sm text-slate-500 mb-1">Severity</div>
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-${severityColor}-50 text-${severityColor}-700 border border-${severityColor}-100">
+                                <div class="w-2 h-2 rounded-full bg-${severityColor}-500"></div>
+                                <span class="text-sm font-semibold">${severityText}</span>
+                            </div>
+                        </div>
+                        ${confidence ? `
+                        <div class="bg-slate-50 rounded-xl p-4">
+                            <div class="text-sm text-slate-500 mb-1">Confidence</div>
+                            <div class="text-lg font-bold text-slate-900">${Math.round(confidence * 100)}%</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ${normalRange ? `
+                    <div class="bg-medical-50 rounded-xl p-4 border border-medical-100">
+                        <div class="text-sm text-medical-700 font-semibold mb-1">Normal Range</div>
+                        <div class="text-sm text-slate-700">${normalRange}</div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const modal = document.getElementById('metricModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Keyboard navigation for modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Add fade-in animation on load
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.fade-in').forEach(function(el, index) {
+                setTimeout(function() {
+                    el.style.opacity = '1';
+                }, index * 100);
+            });
+        });
+    </script>
+
+</body>
+
+</html>

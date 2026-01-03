@@ -1,0 +1,41 @@
+# Environment variables and API keys
+.env
+.env.*
+!.env.example
+
+# Google API credentials
+*credentials*.json
+*key*.json
+service-account*.json
+
+# Output directory with generated reports
+output/
+
+# Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+vendor/
+
+# Binaries
+videoanalytics
+videoanalytics_go
+test_build
+regen_report
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+*.tmp
+*.log
