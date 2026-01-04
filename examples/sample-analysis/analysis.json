@@ -1,0 +1,53 @@
+{
+  "detected_views": {
+    "front_detected": true,
+    "right_detected": true,
+    "left_detected": true,
+    "back_detected": true
+  },
+  "clinical_reasoning": "The subject presents with a notable 'slouched' posture, characterized by significant forward head posture, increased thoracic kyphosis, and a flattened lumbar lordosis. Shoulders are protracted, and there is a general anterior shift in global alignment. Clothing (t-shirt, jeans, shoes) obscures direct visualization of some key bony landmarks such as C7 spinous process, scapular borders, ASIS/PSIS, and the medial arches of the feet, leading to lower confidence in some specific measurements.",
+  "head_neck": {
+    "findings": "Pronounced forward head posture is evident, contributing to a reduced craniovertebral angle. Head appears level and without rotation in the frontal plane.",
+    "craniovertebral_angle": { "value": 39.0, "unit": "degrees", "severity": "moderate", "confidence": 0.80 },
+    "lateral_head_tilt": { "value": 1.0, "unit": "degrees", "severity": "normal", "confidence": 0.90 },
+    "head_rotation": { "value": 1.0, "unit": "degrees", "severity": "normal", "confidence": 0.90 }
+  },
+  "shoulders": {
+    "findings": "Shoulders are significantly protracted and rounded forward. Shoulder height appears symmetrical. Scapular winging cannot be reliably assessed due to clothing.",
+    "shoulder_height_delta": { "value": 5.0, "unit": "mm", "severity": "normal", "confidence": 0.90 },
+    "shoulder_protraction": { "value": 52.0, "unit": "mm", "severity": "moderate", "confidence": 0.85 },
+    "scapular_winging": { "value": null, "unit": "mm", "severity": "unknown", "confidence": 0.00 }
+  },
+  "spine": {
+    "findings": "There is a marked increase in thoracic kyphosis and a reduction/flattening of the lumbar lordosis. No significant lateral deviation (scoliosis) is observed.",
+    "thoracic_kyphosis": { "value": 62.0, "unit": "degrees", "severity": "moderate", "confidence": 0.80 },
+    "lumbar_lordosis": { "value": 28.0, "unit": "degrees", "severity": "moderate", "confidence": 0.75 },
+    "lateral_deviation": { "value": 3.0, "unit": "mm", "severity": "normal", "confidence": 0.90 }
+  },
+  "pelvis": {
+    "findings": "The pelvis appears to have a mild posterior tilt, consistent with the flattened lumbar lordosis. No significant pelvic obliquity or rotation is noted.",
+    "pelvic_tilt": { "value": 7.0, "unit": "degrees", "severity": "mild", "confidence": 0.70 },
+    "pelvic_obliquity": { "value": 3.0, "unit": "mm", "severity": "normal", "confidence": 0.80 },
+    "pelvic_rotation": { "value": 2.0, "unit": "degrees", "severity": "normal", "confidence": 0.85 }
+  },
+  "lower_extremities": {
+    "findings": "Knee alignment is generally normal in the frontal plane, with a very slight valgus. Mild knee hyperextension is present in the sagittal plane. Q-angle is estimated to be mildly elevated.",
+    "knee_valgus_varus": { "value": 6.0, "unit": "degrees", "severity": "normal", "confidence": 0.90 },
+    "knee_hyperextension": { "value": 7.0, "unit": "degrees", "severity": "mild", "confidence": 0.85 },
+    "q_angle": { "value": 15.0, "unit": "degrees", "severity": "mild", "confidence": 0.60 }
+  },
+  "ankles_feet": {
+    "findings": "Feet show a mild toe-out progression angle. Ankle pronation and arch height cannot be reliably assessed due to footwear.",
+    "foot_progression_angle": { "value": 11.0, "unit": "degrees", "severity": "mild", "confidence": 0.85 },
+    "ankle_pronation": { "value": null, "unit": "degrees", "severity": "unknown", "confidence": 0.00 },
+    "arch_height": { "value": null, "unit": "mm", "severity": "unknown", "confidence": 0.00 }
+  },
+  "global_alignment": {
+    "findings": "Overall global alignment shows a moderate anterior deviation of the plumb line, primarily driven by the forward head posture and increased thoracic kyphosis.",
+    "plumb_line_deviation": { "value": 42.0, "unit": "mm", "severity": "moderate", "confidence": 0.80 },
+    "forward_head_posture": { "value": 72.0, "unit": "mm", "severity": "moderate", "confidence": 0.90 }
+  },
+  "image_quality_notes": "All mandatory views are present, along with the optional back view. Lighting is good. However, the subject's clothing (t-shirt, jeans, shoes) significantly obscures direct visualization of several key anatomical landmarks, particularly C7, scapular borders, ASIS/PSIS, and the feet/ankles, impacting the confidence of certain measurements.",
+  "overall_confidence": 0.75,
+  "back_view_provided": true
+}

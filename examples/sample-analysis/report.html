@@ -1,0 +1,2404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Posture Analysis - Nyle Health</title>
+
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self';
+                   script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
+                   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+                   font-src 'self' https://fonts.gstatic.com;
+                   img-src 'self' data:;">
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" as="style">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        medical: {
+                            50: '#f0fdfa',    
+                            100: '#ccfbf1',   
+                            500: '#14b8a6',   
+                            600: '#0d9488',   
+                            900: '#134e4a',   
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+         
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+         
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .no-break {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            @page {
+                margin: 2cm;
+            }
+
+            @page :first {
+                margin-top: 1cm;
+            }
+
+             
+            .detailed-zone-analysis {
+                page-break-before: auto;
+            }
+
+             
+            svg {
+                max-width: 100%;
+                height: auto;
+            }
+
+             
+            button {
+                display: none;
+            }
+
+             
+            .watermark {
+                display: block !important;
+            }
+        }
+
+         
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+         
+        .modal-overlay {
+            backdrop-filter: blur(4px);
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            transition: transform 0.3s ease-out;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+
+    
+    <div class="watermark fixed inset-0 pointer-events-none z-0 hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                    text-slate-200 text-6xl font-bold opacity-10 rotate-[-45deg] select-none">
+            CONFIDENTIAL
+        </div>
+    </div>
+
+    
+    <div class="fixed bottom-6 right-6 flex flex-col gap-3 no-print z-50 fade-in">
+        <button onclick="window.print()"
+                class="bg-medical-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-medical-700 hover:shadow-xl transition-all duration-300 flex items-center gap-2 font-semibold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+            </svg>
+            Export PDF
+        </button>
+        <button onclick="scrollToTop()"
+                class="bg-slate-700 text-white px-6 py-3 rounded-full shadow-lg hover:bg-slate-800 hover:shadow-xl transition-all duration-300 flex items-center gap-2 font-semibold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+            </svg>
+            Top
+        </button>
+    </div>
+
+    
+    <div class="h-2 bg-gradient-to-r from-medical-600 to-emerald-500 w-full fixed top-0 z-50 no-print"></div>
+
+    <main class="max-w-6xl mx-auto px-6 py-12">
+
+        
+        <header role="banner"
+            class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-flex items-center space-x-3 mb-3">
+                    
+                    <div
+                        class="w-10 h-10 bg-medical-600 rounded-lg flex items-center justify-center text-white shadow-lg"
+                        role="img" aria-label="Nyle Health Logo">
+                        <span class="font-serif font-bold text-xl" aria-hidden="true">N</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900 leading-none tracking-tight">NYLE HEALTH</h2>
+                        <span class="text-[10px] font-bold tracking-widest text-medical-600 uppercase">Hinjewadi</span>
+                    </div>
+                </div>
+                <h1 class="text-4xl font-serif font-bold text-slate-900 tracking-tight mb-2 mt-4">Posture Analysis
+                    Report</h1>
+                <p class="text-slate-500">AI-Assisted Physiotherapy Assessment</p>
+
+                
+                <div class="mt-4 text-xs text-slate-500 space-y-1 border-t border-slate-100 pt-3">
+                    
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-slate-600">Overall Confidence:</span>
+                        <div class="flex items-center gap-1">
+                            <div class="flex gap-0.5">
+                                
+                                
+                                    <div class="w-2.5 h-2.5 rounded-full bg-medical-500"></div>
+                                
+                                    <div class="w-2.5 h-2.5 rounded-full bg-medical-500"></div>
+                                
+                                    <div class="w-2.5 h-2.5 rounded-full bg-medical-500"></div>
+                                
+                                    <div class="w-2.5 h-2.5 rounded-full bg-medical-500"></div>
+                                
+                                    <div class="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
+                                
+                            </div>
+                            <span class="ml-1 font-mono">75%</span>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-slate-600">Views Captured:</span>
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-semibold">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            4 Views (Complete)
+                        </span>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="mt-6 md:mt-0 bg-slate-50 rounded-xl p-4 border border-slate-100 text-right relative z-10"
+                 role="status" aria-label="Postural Health Score">
+                <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Postural Health Index
+                </div>
+                <div class="text-3xl font-bold text-slate-900 flex items-center justify-end">
+                    <span aria-label="Score 40 out of 100">40</span>
+                    <span class="text-lg text-slate-400 font-medium ml-0.5">/100</span>
+                    <div
+                        class="ml-3 w-12 h-12 rounded-full border-4 border-slate-100 flex items-center justify-center bg-white shadow-sm"
+                        role="img" aria-label="Needs attention">
+                        <div
+                            class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)] animate-pulse">
+                            <span class="sr-only">Needs Attention</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div
+                class="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-medical-50 to-transparent opacity-50 -z-0">
+            </div>
+        </header>
+
+        
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 mb-8 no-print" role="complementary" aria-label="Severity indicator legend">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-sm font-semibold text-slate-600">Severity Indicators:</span>
+                </div>
+                <div class="flex flex-wrap gap-4 text-xs">
+                    <div class="flex items-center gap-1.5" role="listitem">
+                        <div class="w-3 h-3 rounded-full bg-emerald-500" aria-hidden="true"></div>
+                        <span class="font-medium text-slate-700">Normal</span>
+                    </div>
+                    <div class="flex items-center gap-1.5" role="listitem">
+                        <div class="w-3 h-3 rounded-full bg-yellow-500" aria-hidden="true"></div>
+                        <span class="font-medium text-slate-700">Mild</span>
+                    </div>
+                    <div class="flex items-center gap-1.5" role="listitem">
+                        <div class="w-3 h-3 rounded-full bg-orange-500" aria-hidden="true"></div>
+                        <span class="font-medium text-slate-700">Moderate</span>
+                    </div>
+                    <div class="flex items-center gap-1.5" role="listitem">
+                        <div class="w-3 h-3 rounded-full bg-red-500" aria-hidden="true"></div>
+                        <span class="font-medium text-slate-700">Severe</span>
+                    </div>
+                    <div class="flex items-center gap-1.5" role="listitem">
+                        <div class="w-3 h-3 rounded-full bg-slate-300" aria-hidden="true"></div>
+                        <span class="font-medium text-slate-700">Unknown</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-12">
+
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                
+                <div class="lg:col-span-4 h-full">
+                    <section role="region" aria-label="Biomechanical scan visualization"
+                        class="bg-slate-900 rounded-3xl shadow-xl overflow-hidden relative h-full flex flex-col group border border-slate-800">
+                        
+                        <div
+                            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-teal-500/10 blur-[100px] pointer-events-none">
+                        </div>
+
+                        <div class="p-6 relative z-10 flex justify-between items-start">
+                            <div>
+                                <h2 class="text-white font-bold text-lg flex items-center gap-2">
+                                    <span class="flex h-2 w-2 relative" role="status" aria-label="Active scan">
+                                        <span
+                                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75" aria-hidden="true"></span>
+                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500" aria-hidden="true"></span>
+                                    </span>
+                                    Scan Analysis
+                                </h2>
+                                <p class="text-slate-400 text-xs font-medium tracking-wide mt-1">Biomechanical Scan •
+                                    Anterior View</p>
+                            </div>
+                            <div class="text-right">
+                                
+                            </div>
+                        </div>
+
+                        <div class="flex-1 relative flex justify-center items-center pb-8">
+                            
+                            <svg width="240" height="480" viewBox="0 0 240 480" fill="none"
+                                xmlns="http://www.w3.org/2000/svg" class="drop-shadow-2xl"
+                                role="img" aria-label="Body scan diagram showing posture assessment for head, shoulders, spine, pelvis, knees and feet">
+                                <title>Posture Assessment Body Scan</title>
+                                <desc>Visual representation showing severity indicators for different body regions based on biomechanical analysis</desc>
+                                <defs>
+                                    <linearGradient id="holoGradient" x1="120" y1="0" x2="120" y2="480"
+                                        gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#0f172a" stop-opacity="0" />
+                                        <stop offset="50%" stop-color="#2dd4bf" stop-opacity="0.1" />
+                                        <stop offset="100%" stop-color="#0f172a" stop-opacity="0" />
+                                    </linearGradient>
+                                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feGaussianBlur stdDeviation="5" result="coloredBlur" />
+                                        <feMerge>
+                                            <feMergeNode in="coloredBlur" />
+                                            <feMergeNode in="SourceGraphic" />
+                                        </feMerge>
+                                    </filter>
+                                </defs>
+
+                                
+                                <line x1="120" y1="20" x2="120" y2="460" stroke="#334155" stroke-width="1"
+                                    stroke-dasharray="4 4" />
+
+                                
+                                <path
+                                    d="M120 30 C100 30, 95 45, 95 60 C95 75, 100 85, 120 85 C140 85, 145 75, 145 60 C145 45, 140 30, 120 30 Z"
+                                    fill="url(#holoGradient)" stroke="#2dd4bf" stroke-width="1" stroke-opacity="0.3" />
+                                <path d="M95 85 Q70 90, 60 110 L50 200 L40 260" stroke="#2dd4bf" stroke-width="1"
+                                    stroke-opacity="0.2" fill="none" />
+                                <path d="M145 85 Q170 90, 180 110 L190 200 L200 260" stroke="#2dd4bf" stroke-width="1"
+                                    stroke-opacity="0.2" fill="none" />
+                                <path d="M95 85 L145 85 L145 200 L95 200 Z" fill="url(#holoGradient)" stroke="#2dd4bf"
+                                    stroke-width="1" stroke-opacity="0.2" />
+                                <path d="M95 200 L80 430 H105 L115 200" stroke="#2dd4bf" stroke-width="1"
+                                    stroke-opacity="0.2" fill="none" />
+                                <path d="M145 200 L160 430 H135 L125 200" stroke="#2dd4bf" stroke-width="1"
+                                    stroke-opacity="0.2" fill="none" />
+
+                                
+
+                                
+                                
+                                <circle cx="120" cy="55" r="4" fill="#10b981" opacity="0.6" />
+                                
+
+
+                                
+                                
+                                <rect x="70" y="85" width="100" height="4" rx="2" fill="#10b981" opacity="0.4" />
+                                
+
+
+                                
+                                
+                                <rect x="116" y="90" width="8" height="100" rx="4" fill="#10b981" opacity="0.3" />
+                                
+
+                                
+                                
+                                <rect x="80" y="195" width="80" height="6" rx="3" fill="#10b981" opacity="0.4" />
+                                
+
+                                
+                                
+                                <circle cx="92" cy="310" r="4" fill="#10b981" opacity="0.6" />
+                                <circle cx="148" cy="310" r="4" fill="#10b981" opacity="0.6" />
+                                
+
+                                
+                                
+                                <rect x="75" y="425" width="30" height="4" rx="2" fill="#10b981" opacity="0.4" />
+                                <rect x="135" y="425" width="30" height="4" rx="2" fill="#10b981" opacity="0.4" />
+                                
+
+                            </svg>
+                        </div>
+                    </section>
+                </div>
+
+                
+                <div class="lg:col-span-8 space-y-6 flex flex-col h-full">
+
+                    
+                    
+                    
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
+                        
+                        
+                        
+
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+
+                        
+                        
+                        <div
+                            class="p-5 rounded-xl border-l-4 shadow-sm bg-orange-50 border-orange-400">
+                            <div class="flex items-start justify-between mb-2">
+                                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                    <span
+                                        class="text-orange-500">⚠️</span>
+                                    Head &amp; Neck
+                                </h3>
+                                <span
+                                    class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-600">
+                                    Attention
+                                </span>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-snug">
+                                Pronounced forward head posture is evident, contributing to a reduced craniovertebral angle. Head appears level and without rotation in the frontal plane.
+                            </p>
+                        </div>
+                        
+                        
+                        
+                        
+                        
+
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+
+                        
+                        
+                        <div
+                            class="p-5 rounded-xl border-l-4 shadow-sm bg-orange-50 border-orange-400">
+                            <div class="flex items-start justify-between mb-2">
+                                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                    <span
+                                        class="text-orange-500">⚠️</span>
+                                    Shoulders &amp; Scapulae
+                                </h3>
+                                <span
+                                    class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-600">
+                                    Attention
+                                </span>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-snug">
+                                Shoulders are significantly protracted and rounded forward. Shoulder height appears symmetrical. Scapular winging cannot be reliably assessed due to clothing.
+                            </p>
+                        </div>
+                        
+                        
+                        
+                        
+                        
+
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+
+                        
+                        
+                        <div
+                            class="p-5 rounded-xl border-l-4 shadow-sm bg-orange-50 border-orange-400">
+                            <div class="flex items-start justify-between mb-2">
+                                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                    <span
+                                        class="text-orange-500">⚠️</span>
+                                    Spine
+                                </h3>
+                                <span
+                                    class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-600">
+                                    Attention
+                                </span>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-snug">
+                                There is a marked increase in thoracic kyphosis and a reduction/flattening of the lumbar lordosis. No significant lateral deviation (scoliosis) is observed.
+                            </p>
+                        </div>
+                        
+                        
+                        
+                        
+                        
+
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+
+                        
+                        
+                        
+                        
+                        
+                        
+
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+
+                        
+                        
+                        
+                        
+                        
+                        
+
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+
+                    
+                    <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 no-break flex-1">
+                        <div class="flex items-center gap-3 mb-6 border-b border-slate-50 pb-4">
+                            <div class="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Clinical Reasoning</h2>
+                                <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Physiotherapist
+                                    Assessment</p>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 text-base leading-relaxed text-justify mb-8">
+                            The subject presents with a notable &#39;slouched&#39; posture, characterized by significant forward head posture, increased thoracic kyphosis, and a flattened lumbar lordosis. Shoulders are protracted, and there is a general anterior shift in global alignment. Clothing (t-shirt, jeans, shoes) obscures direct visualization of some key bony landmarks such as C7 spinous process, scapular borders, ASIS/PSIS, and the medial arches of the feet, leading to lower confidence in some specific measurements.
+                        </p>
+
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            
+                            <div
+                                class="bg-slate-50 rounded-xl p-4 border border-slate-100 flex items-center justify-between">
+                                <div>
+                                    <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Plumb
+                                        Line</div>
+                                    <div class="text-xs text-slate-500">Center of mass offset</div>
+                                </div>
+                                <div class="text-xl font-bold text-slate-800">42<span
+                                        class="text-sm text-slate-500 ml-1">mm</span></div>
+                            </div>
+                            
+                            
+                            <div
+                                class="bg-slate-50 rounded-xl p-4 border border-slate-100 flex items-center justify-between">
+                                <div>
+                                    <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Fwd Head
+                                    </div>
+                                    <div class="text-xs text-slate-500">Ear-Shoulder distance</div>
+                                </div>
+                                <div class="text-xl font-bold text-slate-800">72<span
+                                        class="text-sm text-slate-500 ml-1">mm</span></div>
+                            </div>
+                            
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            
+            <section>
+                <div class="flex items-center space-x-4 mb-8">
+                    <h2 class="text-2xl font-serif font-bold text-slate-900">Detailed Zone Analysis</h2>
+                    <div class="h-px bg-slate-200 flex-1"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    
+                    
+    <div
+        class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow duration-300 no-break">
+        <div class="px-6 py-4 border-b border-slate-50 flex items-center justify-between ">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-slate-50 rounded-lg text-slate-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="font-serif text-lg font-bold text-slate-800">Head &amp; Neck</h3>
+            </div>
+            
+        </div>
+        <div class="p-6">
+            
+            <div class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-100">
+                <p class="text-sm text-slate-600 italic leading-relaxed">"Pronounced forward head posture is evident, contributing to a reduced craniovertebral angle. Head appears level and without rotation in the frontal plane."</p>
+            </div>
+            
+
+            <div class="space-y-0 divide-y divide-slate-50">
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Craniovertebral Angle</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-orange-400 w-3/4"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">80%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">39</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">degrees</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    <div
+        class="flex items-center space-x-1.5 bg-orange-50 text-orange-700 px-3 py-1 rounded-full border border-orange-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Moderate</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Head Rotation</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-slate-300 w-1/2"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">90%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">1</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">degrees</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    
+    <div
+        class="flex items-center space-x-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Normal</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Lateral Head Tilt</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-slate-300 w-1/2"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">90%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">1</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">degrees</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    
+    <div
+        class="flex items-center space-x-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Normal</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    
+                    
+                    
+    <div
+        class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow duration-300 no-break">
+        <div class="px-6 py-4 border-b border-slate-50 flex items-center justify-between ">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-slate-50 rounded-lg text-slate-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                </div>
+                <h3 class="font-serif text-lg font-bold text-slate-800">Shoulders &amp; Scapulae</h3>
+            </div>
+            
+        </div>
+        <div class="p-6">
+            
+            <div class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-100">
+                <p class="text-sm text-slate-600 italic leading-relaxed">"Shoulders are significantly protracted and rounded forward. Shoulder height appears symmetrical. Scapular winging cannot be reliably assessed due to clothing."</p>
+            </div>
+            
+
+            <div class="space-y-0 divide-y divide-slate-50">
+                
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Scapular Winging</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-slate-300 w-1/2"></div>
+                            </div>
+                            
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <span class="text-slate-300 text-sm">--</span>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    <span class="text-xs text-gray-400 uppercase tracking-wide">Unknown</span>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="text-xs text-slate-500 italic mt-2 flex items-start gap-1">
+                        <svg class="w-3 h-3 text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Unable to assess - landmark obscured by clothing or positioning</span>
+                    </div>
+                    
+                </div>
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Shoulder Height Delta</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-slate-300 w-1/2"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">90%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">5</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">mm</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    
+    <div
+        class="flex items-center space-x-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Normal</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Shoulder Protraction</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-orange-400 w-3/4"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">85%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">52</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">mm</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    <div
+        class="flex items-center space-x-1.5 bg-orange-50 text-orange-700 px-3 py-1 rounded-full border border-orange-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Moderate</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    
+                    
+                    
+    <div
+        class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow duration-300 no-break">
+        <div class="px-6 py-4 border-b border-slate-50 flex items-center justify-between ">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-slate-50 rounded-lg text-slate-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                    </svg>
+                </div>
+                <h3 class="font-serif text-lg font-bold text-slate-800">Spine</h3>
+            </div>
+            
+        </div>
+        <div class="p-6">
+            
+            <div class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-100">
+                <p class="text-sm text-slate-600 italic leading-relaxed">"There is a marked increase in thoracic kyphosis and a reduction/flattening of the lumbar lordosis. No significant lateral deviation (scoliosis) is observed."</p>
+            </div>
+            
+
+            <div class="space-y-0 divide-y divide-slate-50">
+                
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Lateral Deviation</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-slate-300 w-1/2"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">90%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">3</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">mm</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    
+    <div
+        class="flex items-center space-x-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Normal</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Lumbar Lordosis</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-orange-400 w-3/4"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">75%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">28</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">degrees</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    <div
+        class="flex items-center space-x-1.5 bg-orange-50 text-orange-700 px-3 py-1 rounded-full border border-orange-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Moderate</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Thoracic Kyphosis</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-orange-400 w-3/4"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">80%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">62</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">degrees</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    <div
+        class="flex items-center space-x-1.5 bg-orange-50 text-orange-700 px-3 py-1 rounded-full border border-orange-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Moderate</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    
+                    
+                    
+    <div
+        class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow duration-300 no-break">
+        <div class="px-6 py-4 border-b border-slate-50 flex items-center justify-between ">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-slate-50 rounded-lg text-slate-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                    </svg>
+                </div>
+                <h3 class="font-serif text-lg font-bold text-slate-800">Pelvis &amp; Hips</h3>
+            </div>
+            
+        </div>
+        <div class="p-6">
+            
+            <div class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-100">
+                <p class="text-sm text-slate-600 italic leading-relaxed">"The pelvis appears to have a mild posterior tilt, consistent with the flattened lumbar lordosis. No significant pelvic obliquity or rotation is noted."</p>
+            </div>
+            
+
+            <div class="space-y-0 divide-y divide-slate-50">
+                
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Pelvic Obliquity</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-slate-300 w-1/2"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">80%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">3</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">mm</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    
+    <div
+        class="flex items-center space-x-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Normal</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Pelvic Rotation</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-slate-300 w-1/2"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">85%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">2</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">degrees</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    
+    <div
+        class="flex items-center space-x-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Normal</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Pelvic Tilt</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-yellow-400 w-2/4"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">70%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">7</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">degrees</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    <div
+        class="flex items-center space-x-1.5 bg-yellow-50 text-yellow-700 px-3 py-1 rounded-full border border-yellow-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Mild</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    
+                    
+                    
+    <div
+        class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow duration-300 no-break">
+        <div class="px-6 py-4 border-b border-slate-50 flex items-center justify-between ">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-slate-50 rounded-lg text-slate-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                    </svg>
+                </div>
+                <h3 class="font-serif text-lg font-bold text-slate-800">Lower Extremities</h3>
+            </div>
+            
+        </div>
+        <div class="p-6">
+            
+            <div class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-100">
+                <p class="text-sm text-slate-600 italic leading-relaxed">"Knee alignment is generally normal in the frontal plane, with a very slight valgus. Mild knee hyperextension is present in the sagittal plane. Q-angle is estimated to be mildly elevated."</p>
+            </div>
+            
+
+            <div class="space-y-0 divide-y divide-slate-50">
+                
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Knee Hyperextension</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-yellow-400 w-2/4"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">85%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">7</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">degrees</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    <div
+        class="flex items-center space-x-1.5 bg-yellow-50 text-yellow-700 px-3 py-1 rounded-full border border-yellow-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Mild</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Knee Valgus Varus</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-slate-300 w-1/2"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">90%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">6</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">degrees</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    
+    <div
+        class="flex items-center space-x-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Normal</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Q Angle</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-yellow-400 w-2/4"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">60%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">15</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">degrees</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    <div
+        class="flex items-center space-x-1.5 bg-yellow-50 text-yellow-700 px-3 py-1 rounded-full border border-yellow-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Mild</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    
+                    
+                    
+    <div
+        class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow duration-300 no-break">
+        <div class="px-6 py-4 border-b border-slate-50 flex items-center justify-between ">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-slate-50 rounded-lg text-slate-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                    </svg>
+                </div>
+                <h3 class="font-serif text-lg font-bold text-slate-800">Ankles &amp; Feet</h3>
+            </div>
+            
+        </div>
+        <div class="p-6">
+            
+            <div class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-100">
+                <p class="text-sm text-slate-600 italic leading-relaxed">"Feet show a mild toe-out progression angle. Ankle pronation and arch height cannot be reliably assessed due to footwear."</p>
+            </div>
+            
+
+            <div class="space-y-0 divide-y divide-slate-50">
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Ankle Pronation</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-slate-300 w-1/2"></div>
+                            </div>
+                            
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <span class="text-slate-300 text-sm">--</span>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    <span class="text-xs text-gray-400 uppercase tracking-wide">Unknown</span>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="text-xs text-slate-500 italic mt-2 flex items-start gap-1">
+                        <svg class="w-3 h-3 text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Unable to assess - landmark obscured by clothing or positioning</span>
+                    </div>
+                    
+                </div>
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Arch Height</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-slate-300 w-1/2"></div>
+                            </div>
+                            
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <span class="text-slate-300 text-sm">--</span>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    <span class="text-xs text-gray-400 uppercase tracking-wide">Unknown</span>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="text-xs text-slate-500 italic mt-2 flex items-start gap-1">
+                        <svg class="w-3 h-3 text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Unable to assess - landmark obscured by clothing or positioning</span>
+                    </div>
+                    
+                </div>
+                
+                
+                
+                
+                
+                <div class="py-4 first:pt-0 last:pb-0 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 pr-4">
+                            <span class="text-sm font-medium text-slate-700 block mb-0.5 capitalize">Foot Progression Angle</span>
+                            
+                            <div
+                                class="h-1 w-24 bg-slate-100 rounded-full overflow-hidden mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="h-full bg-yellow-400 w-2/4"></div>
+                            </div>
+                            
+                            
+                            <div class="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-[9px] text-slate-400 uppercase tracking-wide">Confidence:</span>
+                                <div class="flex gap-0.5">
+                                    
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                        <div class="w-1.5 h-1.5 rounded-full bg-medical-500"></div>
+                                    
+                                </div>
+                                <span class="text-[9px] text-slate-500 ml-0.5">85%</span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="flex items-center space-x-6">
+                            <div class="text-right min-w-[80px]">
+                                
+                                <div class="font-mono font-bold text-slate-800 text-lg leading-none">11</div>
+                                <div class="text-[10px] text-slate-400 uppercase font-medium mt-0.5">degrees</div>
+                                
+                            </div>
+                            <div class="w-28 flex justify-end">
+                                
+    
+    <div
+        class="flex items-center space-x-1.5 bg-yellow-50 text-yellow-700 px-3 py-1 rounded-full border border-yellow-100 shadow-sm">
+        <div class="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
+        <span class="text-xs font-semibold uppercase tracking-wide">Mild</span>
+    </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    
+                    
+                </div>
+            </section>
+
+            
+            
+            <section class="bg-gradient-to-br from-medical-50 to-emerald-50 rounded-2xl p-8 border border-medical-100 no-break"
+                     role="region" aria-label="Recommended corrective exercises">
+                <div class="flex items-center gap-3 mb-6 border-b border-medical-100 pb-4">
+                    <div class="p-2 bg-medical-600 text-white rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-serif font-bold text-slate-900">Recommended Corrective Exercises</h2>
+                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Personalized Based on Your Analysis</p>
+                    </div>
+                </div>
+
+                <div class="mb-4 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
+                    <div class="flex items-start gap-2">
+                        <svg class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        <div>
+                            <div class="text-sm font-semibold text-amber-900 mb-1">Important Notice</div>
+                            <p class="text-xs text-amber-800">These exercises are AI-generated recommendations. Please consult with a licensed physiotherapist before starting any exercise program, especially if you experience pain or have existing medical conditions.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-medical-100 hover:shadow-md transition-shadow duration-300 group">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-medical-100 text-medical-700 flex items-center justify-center font-bold text-sm">
+                                    1
+                                </div>
+                                <h3 class="font-bold text-lg text-slate-900 group-hover:text-medical-700 transition-colors">
+                                    
+                                        Chin Tucks
+                                    
+                                </h3>
+                            </div>
+                            <svg class="w-5 h-5 text-medical-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">
+                            
+                                Gently retract chin backward (like making a double chin), hold for 5 seconds. Keep eyes level.
+                            
+                        </p>
+
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-start gap-2 text-xs">
+                                <svg class="w-4 h-4 text-medical-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <span class="font-semibold text-slate-700">Frequency:</span>
+                                    <span class="text-slate-600">
+                                        
+                                            3 sets of 10 reps, 2x daily
+                                        
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100">
+                            <div class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-xs text-slate-600 italic">
+                                    
+                                        Strengthens deep neck flexors and reduces forward head posture
+                                    
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-medical-100 hover:shadow-md transition-shadow duration-300 group">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-medical-100 text-medical-700 flex items-center justify-center font-bold text-sm">
+                                    2
+                                </div>
+                                <h3 class="font-bold text-lg text-slate-900 group-hover:text-medical-700 transition-colors">
+                                    
+                                        Thoracic Extensions
+                                    
+                                </h3>
+                            </div>
+                            <svg class="w-5 h-5 text-medical-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">
+                            
+                                Place hands behind head, gently extend upper back over a foam roller or rolled towel. Hold 30 seconds.
+                            
+                        </p>
+
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-start gap-2 text-xs">
+                                <svg class="w-4 h-4 text-medical-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <span class="font-semibold text-slate-700">Frequency:</span>
+                                    <span class="text-slate-600">
+                                        
+                                            3-5 repetitions, 1-2x daily
+                                        
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100">
+                            <div class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-xs text-slate-600 italic">
+                                    
+                                        Improves thoracic spine mobility and reduces excessive kyphosis
+                                    
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-medical-100 hover:shadow-md transition-shadow duration-300 group">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-medical-100 text-medical-700 flex items-center justify-center font-bold text-sm">
+                                    3
+                                </div>
+                                <h3 class="font-bold text-lg text-slate-900 group-hover:text-medical-700 transition-colors">
+                                    
+                                        Scapular Retractions
+                                    
+                                </h3>
+                            </div>
+                            <svg class="w-5 h-5 text-medical-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">
+                            
+                                Squeeze shoulder blades together as if holding a pencil between them. Hold for 5 seconds.
+                            
+                        </p>
+
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-start gap-2 text-xs">
+                                <svg class="w-4 h-4 text-medical-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <span class="font-semibold text-slate-700">Frequency:</span>
+                                    <span class="text-slate-600">
+                                        
+                                            3 sets of 15 reps, 2x daily
+                                        
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100">
+                            <div class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-xs text-slate-600 italic">
+                                    
+                                        Strengthens rhomboids and middle trapezius to improve shoulder posture
+                                    
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-medical-100 hover:shadow-md transition-shadow duration-300 group">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-medical-100 text-medical-700 flex items-center justify-center font-bold text-sm">
+                                    4
+                                </div>
+                                <h3 class="font-bold text-lg text-slate-900 group-hover:text-medical-700 transition-colors">
+                                    
+                                        Pelvic Tilts
+                                    
+                                </h3>
+                            </div>
+                            <svg class="w-5 h-5 text-medical-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">
+                            
+                                Lie on back with knees bent. Flatten lower back against floor by tilting pelvis. Hold 5 seconds.
+                            
+                        </p>
+
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-start gap-2 text-xs">
+                                <svg class="w-4 h-4 text-medical-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <span class="font-semibold text-slate-700">Frequency:</span>
+                                    <span class="text-slate-600">
+                                        
+                                            3 sets of 12 reps, 1-2x daily
+                                        
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100">
+                            <div class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-xs text-slate-600 italic">
+                                    
+                                        Activates core muscles and normalizes lumbar curve
+                                    
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-medical-100 hover:shadow-md transition-shadow duration-300 group">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-medical-100 text-medical-700 flex items-center justify-center font-bold text-sm">
+                                    5
+                                </div>
+                                <h3 class="font-bold text-lg text-slate-900 group-hover:text-medical-700 transition-colors">
+                                    
+                                        Quadriceps Strengthening
+                                    
+                                </h3>
+                            </div>
+                            <svg class="w-5 h-5 text-medical-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">
+                            
+                                Seated leg extensions with slight knee bend. Focus on controlled movement without locking knees.
+                            
+                        </p>
+
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-start gap-2 text-xs">
+                                <svg class="w-4 h-4 text-medical-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <span class="font-semibold text-slate-700">Frequency:</span>
+                                    <span class="text-slate-600">
+                                        
+                                            3 sets of 10 reps, 3x weekly
+                                        
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100">
+                            <div class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-xs text-slate-600 italic">
+                                    
+                                        Improves knee control and reduces hyperextension tendency
+                                    
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-medical-100 hover:shadow-md transition-shadow duration-300 group">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-medical-100 text-medical-700 flex items-center justify-center font-bold text-sm">
+                                    6
+                                </div>
+                                <h3 class="font-bold text-lg text-slate-900 group-hover:text-medical-700 transition-colors">
+                                    
+                                        Postural Awareness Practice
+                                    
+                                </h3>
+                            </div>
+                            <svg class="w-5 h-5 text-medical-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">
+                            
+                                Stand against wall with heels, buttocks, shoulders, and head touching. Hold 30 seconds while breathing normally.
+                            
+                        </p>
+
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-start gap-2 text-xs">
+                                <svg class="w-4 h-4 text-medical-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <span class="font-semibold text-slate-700">Frequency:</span>
+                                    <span class="text-slate-600">
+                                        
+                                            2-3 times daily
+                                        
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100">
+                            <div class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-xs text-slate-600 italic">
+                                    
+                                        Develops kinesthetic awareness of optimal alignment
+                                    
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="mt-6 p-4 bg-white rounded-xl border border-medical-100">
+                    <p class="text-xs text-slate-600 text-center">
+                        <span class="font-semibold">Pro Tip:</span> Start slowly and focus on proper form. Consistency is more important than intensity. Take photos every 2-3 weeks to track your progress.
+                    </p>
+                </div>
+            </section>
+            
+
+            
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 no-break">
+                <h2 class="text-lg font-bold text-slate-900 mb-6 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    Reference Input Views
+                </h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    
+                    <div
+                        class="group relative aspect-[3/4] bg-slate-100 rounded-lg overflow-hidden border border-slate-200 cursor-pointer">
+                        <img src="back.png" alt="back"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                            <span class="text-[10px] font-bold text-white uppercase tracking-wider">back</span>
+                        </div>
+                    </div>
+                    
+                    <div
+                        class="group relative aspect-[3/4] bg-slate-100 rounded-lg overflow-hidden border border-slate-200 cursor-pointer">
+                        <img src="front.png" alt="front"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                            <span class="text-[10px] font-bold text-white uppercase tracking-wider">front</span>
+                        </div>
+                    </div>
+                    
+                    <div
+                        class="group relative aspect-[3/4] bg-slate-100 rounded-lg overflow-hidden border border-slate-200 cursor-pointer">
+                        <img src="left.png" alt="left"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                            <span class="text-[10px] font-bold text-white uppercase tracking-wider">left</span>
+                        </div>
+                    </div>
+                    
+                    <div
+                        class="group relative aspect-[3/4] bg-slate-100 rounded-lg overflow-hidden border border-slate-200 cursor-pointer">
+                        <img src="right.png" alt="right"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                            <span class="text-[10px] font-bold text-white uppercase tracking-wider">right</span>
+                        </div>
+                    </div>
+                    
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    
+
+    
+    
+
+    
+    
+
+    
+    <div id="metricModal" class="hidden fixed inset-0 bg-black/50 z-50 lg:hidden modal-overlay" onclick="closeModal(event)">
+        <div class="absolute bottom-0 inset-x-0 bg-white rounded-t-3xl p-6 max-h-[80vh] overflow-y-auto modal-content"
+             onclick="event.stopPropagation()" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                <h3 id="modalTitle" class="font-bold text-lg text-slate-900"></h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition-colors"
+                        aria-label="Close modal">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    
+    <script>
+        
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        
+        function showMetricDetails(metricName, value, unit, severity, confidence, normalRange) {
+            const modal = document.getElementById('metricModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+
+            modalTitle.textContent = metricName;
+
+            let severityColor = 'emerald';
+            let severityText = 'Normal';
+            if (severity === 'mild') {
+                severityColor = 'yellow';
+                severityText = 'Mild';
+            } else if (severity === 'moderate') {
+                severityColor = 'orange';
+                severityText = 'Moderate';
+            } else if (severity === 'severe') {
+                severityColor = 'red';
+                severityText = 'Severe';
+            } else if (severity === 'unknown') {
+                severityColor = 'slate';
+                severityText = 'Unknown';
+            }
+
+            modalContent.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-slate-50 rounded-xl p-4">
+                        <div class="text-sm text-slate-500 mb-1">Current Value</div>
+                        <div class="text-3xl font-bold text-slate-900">
+                            ${value !== null ? value + ' <span class="text-lg text-slate-500">' + unit + '</span>' : '--'}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-slate-50 rounded-xl p-4">
+                            <div class="text-sm text-slate-500 mb-1">Severity</div>
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-${severityColor}-50 text-${severityColor}-700 border border-${severityColor}-100">
+                                <div class="w-2 h-2 rounded-full bg-${severityColor}-500"></div>
+                                <span class="text-sm font-semibold">${severityText}</span>
+                            </div>
+                        </div>
+                        ${confidence ? `
+                        <div class="bg-slate-50 rounded-xl p-4">
+                            <div class="text-sm text-slate-500 mb-1">Confidence</div>
+                            <div class="text-lg font-bold text-slate-900">${Math.round(confidence * 100)}%</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ${normalRange ? `
+                    <div class="bg-medical-50 rounded-xl p-4 border border-medical-100">
+                        <div class="text-sm text-medical-700 font-semibold mb-1">Normal Range</div>
+                        <div class="text-sm text-slate-700">${normalRange}</div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const modal = document.getElementById('metricModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.fade-in').forEach(function(el, index) {
+                setTimeout(function() {
+                    el.style.opacity = '1';
+                }, index * 100);
+            });
+        });
+    </script>
+
+</body>
+
+</html>
