@@ -297,244 +297,36 @@
                                     Scan Analysis
                                 </h2>
                                 <p class="text-slate-400 text-xs font-medium tracking-wide mt-1">Biomechanical Scan •
-                                    Anterior View</p>
+                                    Lateral View</p>
                             </div>
                             <div class="text-right">
                                 <!-- Health score moved to header -->
                             </div>
                         </div>
 
-                        <div class="flex-1 relative flex justify-center items-center pb-8">
-                            <!-- Holographic Body Map -->
-                            <svg width="240" height="480" viewBox="0 0 240 480" fill="none"
-                                xmlns="http://www.w3.org/2000/svg" class="drop-shadow-2xl"
-                                role="img" aria-label="Body scan diagram showing posture assessment for head, shoulders, spine, pelvis, knees and feet">
-                                <title>Posture Assessment Body Scan</title>
-                                <desc>Visual representation showing severity indicators for different body regions based on biomechanical analysis</desc>
-                                <defs>
-                                    <linearGradient id="holoGradient" x1="120" y1="0" x2="120" y2="480"
-                                        gradientUnits="userSpaceOnUse">
-                                        <stop offset="0%" stop-color="#0f172a" stop-opacity="0" />
-                                        <stop offset="50%" stop-color="#2dd4bf" stop-opacity="0.1" />
-                                        <stop offset="100%" stop-color="#0f172a" stop-opacity="0" />
-                                    </linearGradient>
-                                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                                        <feGaussianBlur stdDeviation="5" result="coloredBlur" />
-                                        <feMerge>
-                                            <feMergeNode in="coloredBlur" />
-                                            <feMergeNode in="SourceGraphic" />
-                                        </feMerge>
-                                    </filter>
-                                </defs>
-
-                                <!-- Central Axis (Dotted) -->
-                                <line x1="120" y1="20" x2="120" y2="460" stroke="#334155" stroke-width="1"
-                                    stroke-dasharray="4 4" />
-
-                                <!-- Body Silhouette (Smooth Hologram) -->
-                                <path
-                                    d="M120 30 C100 30, 95 45, 95 60 C95 75, 100 85, 120 85 C140 85, 145 75, 145 60 C145 45, 140 30, 120 30 Z"
-                                    fill="url(#holoGradient)" stroke="#2dd4bf" stroke-width="1" stroke-opacity="0.3" />
-                                <path d="M95 85 Q70 90, 60 110 L50 200 L40 260" stroke="#2dd4bf" stroke-width="1"
-                                    stroke-opacity="0.2" fill="none" />
-                                <path d="M145 85 Q170 90, 180 110 L190 200 L200 260" stroke="#2dd4bf" stroke-width="1"
-                                    stroke-opacity="0.2" fill="none" />
-                                <path d="M95 85 L145 85 L145 200 L95 200 Z" fill="url(#holoGradient)" stroke="#2dd4bf"
-                                    stroke-width="1" stroke-opacity="0.2" />
-                                <path d="M95 200 L80 430 H105 L115 200" stroke="#2dd4bf" stroke-width="1"
-                                    stroke-opacity="0.2" fill="none" />
-                                <path d="M145 200 L160 430 H135 L125 200" stroke="#2dd4bf" stroke-width="1"
-                                    stroke-opacity="0.2" fill="none" />
-
-                                <!-- Nodes and Status Indicators with Schematic Labels -->
-
-                                <!-- HEAD -->
-                                {{ if eq .head_neck.severity "severe" }}
-                                <!-- Schematic Connector -->
-                                <path d="M130 55 L160 55 L170 45" stroke="#ef4444" stroke-width="1" fill="none"
-                                    opacity="0.8" />
-                                <!-- Label Box -->
-                                <rect x="170" y="35" width="60" height="14" rx="2" fill="#ef4444" opacity="0.9" />
-                                <text x="200" y="46" font-family="monospace" font-size="10" fill="white"
-                                    font-weight="bold" text-anchor="middle">HEAD:SEV</text>
-
-                                <!-- Core & Pulse -->
-                                <circle cx="120" cy="55" r="25" class="stroke-red-500/50 animate-ping" stroke-width="1"
-                                    fill="none" />
-                                <circle cx="120" cy="55" r="8" fill="#ef4444" filter="url(#glow)" />
-                                <!-- Target Brackets -->
-                                <path
-                                    d="M100 35 L90 35 L90 45 M150 35 L160 35 L160 45 M90 65 L90 75 L100 75 M160 65 L160 75 L150 75"
-                                    stroke="#ef4444" stroke-width="2" fill="none" filter="url(#glow)" />
-
-                                {{ else if eq .head_neck.severity "moderate" }}
-                                <!-- Connector -->
-                                <path d="M130 55 L160 55" stroke="#f97316" stroke-width="1" fill="none" opacity="0.6" />
-                                <text x="165" y="58" font-family="monospace" font-size="9" fill="#f97316"
-                                    font-weight="bold">MOD</text>
-
-                                <!-- Core -->
-                                <circle cx="120" cy="55" r="8" fill="#f97316" filter="url(#glow)" />
-                                <circle cx="120" cy="55" r="20" class="stroke-orange-500/40 animate-pulse"
-                                    stroke-width="0.5" fill="none" />
-                                {{ else if eq .head_neck.severity "mild" }}
-                                <!-- Core -->
-                                <circle cx="120" cy="55" r="6" fill="#eab308" filter="url(#glow)" />
-                                <circle cx="120" cy="55" r="15" stroke="#eab308" stroke-width="0.5" fill="none" opacity="0.3" />
-                                {{ else if eq .head_neck.severity "unknown" }}
-                                <circle cx="120" cy="55" r="4" fill="#94a3b8" opacity="0.5" />
-                                {{ else }}
-                                <circle cx="120" cy="55" r="4" fill="#10b981" opacity="0.6" />
+                        <div class="flex-1 relative flex justify-center items-center pb-8 px-4">
+                            <!-- Annotated Lateral View -->
+                            <div class="relative inline-block">
+                                <img src="{{ .input_images.right }}" alt="Right Lateral View" class="max-h-[450px] w-auto rounded-lg opacity-90">
+                                {{ range .annotations }}
+                                <div class="absolute transform -translate-x-1/2 -translate-y-1/2 group" style="left: {{ .x_percent }}%; top: {{ .y_percent }}%;">
+                                    <!-- Marker dot with glow -->
+                                    <div class="w-3 h-3 rounded-full {{ if eq .severity "severe" }}bg-red-500{{ else }}bg-orange-500{{ end }} border-2 border-white shadow-lg animate-pulse"></div>
+                                    <!-- Connector line and label -->
+                                    <div class="absolute left-4 top-1/2 -translate-y-1/2 flex items-center">
+                                        <div class="w-8 h-px {{ if eq .severity "severe" }}bg-red-500{{ else }}bg-orange-500{{ end }}"></div>
+                                        <div class="{{ if eq .severity "severe" }}bg-red-500{{ else }}bg-orange-500{{ end }} text-white text-[9px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap">
+                                            {{ .finding }}
+                                        </div>
+                                    </div>
+                                </div>
                                 {{ end }}
-
-
-                                <!-- SHOULDERS -->
-                                {{ if eq .shoulders.severity "severe" }}
-                                <path d="M55 85 L35 85 L25 75" stroke="#ef4444" stroke-width="1" fill="none"
-                                    opacity="0.8" />
-                                <rect x="5" y="65" width="65" height="14" rx="2" fill="#ef4444" opacity="0.9" />
-                                <text x="37" y="76" font-family="monospace" font-size="10" fill="white"
-                                    font-weight="bold" text-anchor="middle">SHLDR:SEV</text>
-
-                                <rect x="60" y="75" width="120" height="25" rx="12"
-                                    class="stroke-red-500/50 animate-ping" stroke-width="1" fill="none" />
-                                <rect x="70" y="85" width="100" height="4" rx="2" fill="#ef4444" filter="url(#glow)" />
-                                <!-- Target Brackets -->
-                                <path
-                                    d="M60 75 L50 75 L50 85 M190 75 L200 75 L200 85 M50 100 L50 110 L60 110 M200 100 L200 110 L190 110"
-                                    stroke="#ef4444" stroke-width="2" fill="none" filter="url(#glow)" />
-                                {{ else if eq .shoulders.severity "moderate" }}
-                                <path d="M55 85 L35 85" stroke="#f97316" stroke-width="1" fill="none" opacity="0.6" />
-                                <text x="5" y="88" font-family="monospace" font-size="9" fill="#f97316"
-                                    font-weight="bold">SHLDR:MOD</text>
-                                <rect x="70" y="85" width="100" height="4" rx="2" fill="#f97316" filter="url(#glow)" />
-                                {{ else if eq .shoulders.severity "mild" }}
-                                <rect x="70" y="85" width="100" height="4" rx="2" fill="#eab308" filter="url(#glow)" opacity="0.7" />
-                                {{ else if eq .shoulders.severity "unknown" }}
-                                <rect x="70" y="85" width="100" height="4" rx="2" fill="#94a3b8" opacity="0.4" />
-                                {{ else }}
-                                <rect x="70" y="85" width="100" height="4" rx="2" fill="#10b981" opacity="0.4" />
+                                {{ if not .annotations }}
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="bg-emerald-500/90 text-white text-xs font-bold px-3 py-1.5 rounded-full">✓ No major issues detected</span>
+                                </div>
                                 {{ end }}
-
-
-                                <!-- SPINE -->
-                                {{ if eq .spine.severity "severe" }}
-                                <path d="M140 140 L160 140 L170 130" stroke="#ef4444" stroke-width="1" fill="none"
-                                    opacity="0.8" />
-                                <rect x="170" y="120" width="60" height="14" rx="2" fill="#ef4444" opacity="0.9" />
-                                <text x="200" y="131" font-family="monospace" font-size="10" fill="white"
-                                    font-weight="bold" text-anchor="middle">SPINE:SEV</text>
-
-                                <rect x="106" y="90" width="28" height="100" rx="14"
-                                    class="stroke-red-500/50 animate-ping" stroke-width="1" fill="none" />
-                                <rect x="116" y="90" width="8" height="100" rx="4" fill="#ef4444" filter="url(#glow)" />
-                                <!-- Target Brackets -->
-                                <path
-                                    d="M100 90 L90 90 L90 100 M150 90 L160 90 L160 100 M90 180 L90 190 L100 190 M160 180 L160 190 L150 190"
-                                    stroke="#ef4444" stroke-width="2" fill="none" filter="url(#glow)" />
-                                {{ else if eq .spine.severity "moderate" }}
-                                <path d="M140 140 L160 140" stroke="#f97316" stroke-width="1" fill="none"
-                                    opacity="0.6" />
-                                <text x="165" y="143" font-family="monospace" font-size="9" fill="#f97316"
-                                    font-weight="bold">SPN:MOD</text>
-                                <rect x="116" y="90" width="8" height="100" rx="4" fill="#f97316" filter="url(#glow)" />
-                                {{ else if eq .spine.severity "mild" }}
-                                <rect x="116" y="90" width="8" height="100" rx="4" fill="#eab308" filter="url(#glow)" opacity="0.6" />
-                                {{ else if eq .spine.severity "unknown" }}
-                                <rect x="116" y="90" width="8" height="100" rx="4" fill="#94a3b8" opacity="0.3" />
-                                {{ else }}
-                                <rect x="116" y="90" width="8" height="100" rx="4" fill="#10b981" opacity="0.3" />
-                                {{ end }}
-
-                                <!-- PELVIS -->
-                                {{ if eq .pelvis.severity "severe" }}
-                                <path d="M55 198 L35 198 L25 188" stroke="#ef4444" stroke-width="1" fill="none"
-                                    opacity="0.8" />
-                                <rect x="5" y="178" width="65" height="14" rx="2" fill="#ef4444" opacity="0.9" />
-                                <text x="37" y="189" font-family="monospace" font-size="10" fill="white"
-                                    font-weight="bold" text-anchor="middle">PELVIS:SEV</text>
-
-                                <rect x="70" y="185" width="100" height="25" rx="12"
-                                    class="stroke-red-500/50 animate-ping" stroke-width="1" fill="none" />
-                                <rect x="80" y="195" width="80" height="6" rx="3" fill="#ef4444" filter="url(#glow)" />
-                                <!-- Target Brackets -->
-                                <path
-                                    d="M70 185 L60 185 L60 195 M180 185 L190 185 L190 195 M60 215 L60 225 L70 225 M190 215 L190 225 L180 225"
-                                    stroke="#ef4444" stroke-width="2" fill="none" filter="url(#glow)" />
-                                {{ else if eq .pelvis.severity "moderate" }}
-                                <path d="M55 198 L35 198" stroke="#f97316" stroke-width="1" fill="none" opacity="0.6" />
-                                <text x="5" y="201" font-family="monospace" font-size="9" fill="#f97316"
-                                    font-weight="bold">PELV:MOD</text>
-                                <rect x="80" y="195" width="80" height="6" rx="3" fill="#f97316" filter="url(#glow)" />
-                                {{ else if eq .pelvis.severity "mild" }}
-                                <rect x="80" y="195" width="80" height="6" rx="3" fill="#eab308" filter="url(#glow)" opacity="0.7" />
-                                {{ else if eq .pelvis.severity "unknown" }}
-                                <rect x="80" y="195" width="80" height="6" rx="3" fill="#94a3b8" opacity="0.4" />
-                                {{ else }}
-                                <rect x="80" y="195" width="80" height="6" rx="3" fill="#10b981" opacity="0.4" />
-                                {{ end }}
-
-                                <!-- KNEES -->
-                                {{ if eq .lower_extremities.severity "severe" }}
-                                <path d="M150 310 L180 310 L190 300" stroke="#ef4444" stroke-width="1" fill="none"
-                                    opacity="0.8" />
-                                <rect x="170" y="290" width="50" height="14" rx="2" fill="#ef4444" opacity="0.9" />
-                                <text x="195" y="301" font-family="monospace" font-size="10" fill="white"
-                                    font-weight="bold" text-anchor="middle">KNEE:SEV</text>
-
-                                <circle cx="92" cy="310" r="15" class="stroke-red-500/50 animate-ping" stroke-width="1"
-                                    fill="none" />
-                                <circle cx="148" cy="310" r="15" class="stroke-red-500/50 animate-ping" stroke-width="1"
-                                    fill="none" />
-                                <circle cx="92" cy="310" r="4" fill="#ef4444" filter="url(#glow)" />
-                                <circle cx="148" cy="310" r="4" fill="#ef4444" filter="url(#glow)" />
-                                {{ else if eq .lower_extremities.severity "moderate" }}
-                                <path d="M150 310 L170 310" stroke="#f97316" stroke-width="1" fill="none"
-                                    opacity="0.6" />
-                                <text x="175" y="313" font-family="monospace" font-size="9" fill="#f97316"
-                                    font-weight="bold">LEGS:MOD</text>
-                                <circle cx="92" cy="310" r="4" fill="#f97316" filter="url(#glow)" />
-                                <circle cx="148" cy="310" r="4" fill="#f97316" filter="url(#glow)" />
-                                {{ else if eq .lower_extremities.severity "mild" }}
-                                <circle cx="92" cy="310" r="4" fill="#eab308" filter="url(#glow)" opacity="0.8" />
-                                <circle cx="148" cy="310" r="4" fill="#eab308" filter="url(#glow)" opacity="0.8" />
-                                {{ else if eq .lower_extremities.severity "unknown" }}
-                                <circle cx="92" cy="310" r="4" fill="#94a3b8" opacity="0.5" />
-                                <circle cx="148" cy="310" r="4" fill="#94a3b8" opacity="0.5" />
-                                {{ else }}
-                                <circle cx="92" cy="310" r="4" fill="#10b981" opacity="0.6" />
-                                <circle cx="148" cy="310" r="4" fill="#10b981" opacity="0.6" />
-                                {{ end }}
-
-                                <!-- FEET -->
-                                {{ if eq .ankles_feet.severity "severe" }}
-                                <path d="M150 425 L180 425 L190 415" stroke="#ef4444" stroke-width="1" fill="none"
-                                    opacity="0.8" />
-                                <rect x="170" y="405" width="50" height="14" rx="2" fill="#ef4444" opacity="0.9" />
-                                <text x="195" y="416" font-family="monospace" font-size="10" fill="white"
-                                    font-weight="bold" text-anchor="middle">FOOT:SEV</text>
-
-                                <rect x="65" y="415" width="50" height="25" rx="12"
-                                    class="stroke-red-500/50 animate-ping" stroke-width="1" fill="none" />
-                                <rect x="125" y="415" width="50" height="25" rx="12"
-                                    class="stroke-red-500/50 animate-ping" stroke-width="1" fill="none" />
-                                <rect x="75" y="425" width="30" height="4" rx="2" fill="#ef4444" filter="url(#glow)" />
-                                <rect x="135" y="425" width="30" height="4" rx="2" fill="#ef4444" filter="url(#glow)" />
-                                {{ else if eq .ankles_feet.severity "moderate" }}
-                                <rect x="75" y="425" width="30" height="4" rx="2" fill="#f97316" filter="url(#glow)" />
-                                <rect x="135" y="425" width="30" height="4" rx="2" fill="#f97316" filter="url(#glow)" />
-                                {{ else if eq .ankles_feet.severity "mild" }}
-                                <rect x="75" y="425" width="30" height="4" rx="2" fill="#eab308" filter="url(#glow)" opacity="0.7" />
-                                <rect x="135" y="425" width="30" height="4" rx="2" fill="#eab308" filter="url(#glow)" opacity="0.7" />
-                                {{ else if eq .ankles_feet.severity "unknown" }}
-                                <rect x="75" y="425" width="30" height="4" rx="2" fill="#94a3b8" opacity="0.4" />
-                                <rect x="135" y="425" width="30" height="4" rx="2" fill="#94a3b8" opacity="0.4" />
-                                {{ else }}
-                                <rect x="75" y="425" width="30" height="4" rx="2" fill="#10b981" opacity="0.4" />
-                                <rect x="135" y="425" width="30" height="4" rx="2" fill="#10b981" opacity="0.4" />
-                                {{ end }}
-
-                            </svg>
+                            </div>
                         </div>
                     </section>
                 </div>
@@ -653,6 +445,93 @@
                     {{ end }}
                 </div>
             </section>
+
+            <!-- Clinical Insights -->
+            {{ if .clinical_inference }}
+            <section class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 border border-indigo-100 no-break">
+                <div class="flex items-center gap-3 mb-6 border-b border-indigo-100 pb-4">
+                    <div class="p-2 bg-indigo-600 text-white rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-serif font-bold text-slate-900">Clinical Insights</h2>
+                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Evidence-Based Analysis</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Muscle Imbalances -->
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-indigo-100">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            Muscle Imbalances
+                        </h3>
+                        <div class="space-y-3">
+                            <div>
+                                <span class="text-xs font-semibold text-red-600 uppercase tracking-wider">Likely Tight</span>
+                                <div class="flex flex-wrap gap-1 mt-1">
+                                    {{ range .clinical_inference.muscle_imbalances.likely_tight }}
+                                    <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">{{ . }}</span>
+                                    {{ end }}
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider">Likely Weak</span>
+                                <div class="flex flex-wrap gap-1 mt-1">
+                                    {{ range .clinical_inference.muscle_imbalances.likely_weak }}
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">{{ . }}</span>
+                                    {{ end }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Priority Areas -->
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-indigo-100">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Priority Areas
+                        </h3>
+                        <div class="flex flex-wrap gap-2">
+                            {{ range $i, $area := .clinical_inference.priority_areas }}
+                            <span class="px-3 py-1.5 bg-amber-100 text-amber-800 text-sm font-medium rounded-lg flex items-center gap-1">
+                                <span class="w-5 h-5 bg-amber-500 text-white rounded-full text-xs flex items-center justify-center">{{ add $i 1 }}</span>
+                                {{ $area }}
+                            </span>
+                            {{ end }}
+                        </div>
+                    </div>
+
+                    <!-- Compensation Chain -->
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-indigo-100 md:col-span-2">
+                        <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                            </svg>
+                            Compensation Chain
+                        </h3>
+                        <p class="text-slate-600 text-sm bg-purple-50 p-3 rounded-lg">{{ .clinical_inference.compensation_chain }}</p>
+                    </div>
+
+                    <!-- Clinical Implications -->
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-indigo-100 md:col-span-2">
+                        <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                            Clinical Implications
+                        </h3>
+                        <p class="text-slate-600 text-sm">{{ .clinical_inference.clinical_implications }}</p>
+                    </div>
+                </div>
+            </section>
+            {{ end }}
 
             <!-- Exercise Recommendations -->
             {{ if .Exercises }}
