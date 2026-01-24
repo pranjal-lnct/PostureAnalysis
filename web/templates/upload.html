@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posture Analysis - Upload</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+            <h1 class="text-2xl font-bold text-slate-800 mb-2">Posture Analysis</h1>
+            <p class="text-slate-500 mb-6">Upload 4 images for comprehensive posture assessment</p>
+            
+            <form id="uploadForm" action="/analyze" method="POST" enctype="multipart/form-data">
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-slate-700">Front View *</label>
+                        <input type="file" name="front" accept="image/*" required
+                            class="w-full text-sm border border-slate-300 rounded-lg p-2 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-slate-700">Back View *</label>
+                        <input type="file" name="back" accept="image/*" required
+                            class="w-full text-sm border border-slate-300 rounded-lg p-2 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-slate-700">Left Side *</label>
+                        <input type="file" name="left" accept="image/*" required
+                            class="w-full text-sm border border-slate-300 rounded-lg p-2 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-slate-700">Right Side *</label>
+                        <input type="file" name="right" accept="image/*" required
+                            class="w-full text-sm border border-slate-300 rounded-lg p-2 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100">
+                    </div>
+                </div>
+                
+                <button type="submit" id="submitBtn"
+                    class="w-full bg-teal-600 text-white font-semibold py-3 px-6 rounded-xl hover:bg-teal-700 transition-colors">
+                    Analyze Posture
+                </button>
+            </form>
+            
+            <div id="loading" class="hidden mt-6 text-center">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-teal-500 border-t-transparent"></div>
+                <p class="mt-2 text-slate-600">Analyzing posture... This may take a minute.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function() {
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').textContent = 'Processing...';
+            document.getElementById('loading').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
